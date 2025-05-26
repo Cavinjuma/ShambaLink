@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ShambaLink- Smart Market for Farmers</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <header>
+    <h1>🌱 ShambaLink</h1>
+    <p>Real-time market prices and connections for farmers</p>
+  </header>
+  <div class="user-bar">
+  <span id="welcomeMsg"></span>
+  <button id="logoutBtn">Logout</button>
+</div>
+
+  <p>Are you a <b>Farmer?</b> Have an account?</p>
+    <button><a href="register.html">Login / Register</a></button>
+    <a href="profile.html">Go to Profile</a><br>
+    <a href="buyer.html">Buyer Dashboard</a>
+  <main>
+    <section class="market-prices">
+      <h2>Today's Market Prices</h2>
+      <div id="prices">
+        <!-- Prices will be loaded here -->
+      </div>
+    </section>
+
+    <section class="produce-listing">
+      <h2>List Your Produce</h2>
+      <form id="produceForm">
+        <input type="text" placeholder="Produce Name" id="produceName" required>
+        <input type="number" placeholder="Quantity (kg)" id="quantity" required>
+        <input type="number" placeholder="Price per kg" id="price" required>
+        <label for="produceImage">Upload Produce Image:</label>
+<input type="file" id="produceImage" accept="image/*" />
+<br>
+<img id="imagePreview" src="#" alt="Image Preview" style="display: none; max-width: 100%; margin-top: 10px;" />
+
+        <button type="submit">Submit</button>
+      </form>
+    </section>
+    <!-- Nearby Markets Section -->
+<section class="nearby-markets">
+  <h2>Nearby Buyers & Markets</h2>
+  <div id="marketList">
+    <!-- Nearby markets will appear here -->
+  </div>
+</section>
+
+<!-- Farmer's Produce Listings -->
+<section class="my-produce">
+  <h2>My Listed Produce</h2>
+  <ul id="produceList"></ul>
+</section>
+
+  </main>
+
+  <footer>
+    <p>&copy; 2025 ShambaLink</p>
+  </footer>
+  <script src="script.js">
+    if (localStorage.getItem("loggedIn") !== "true") {
+  alert("Please log in first.");
+  window.location.href = "login.html";
+}
+    
+
+  </script>
+  <script>
+    
+  // Show logged in user name
+  const user = JSON.parse(localStorage.getItem("farmerUser"));
+  if (user) {
+    document.getElementById("welcomeMsg").innerText = `Welcome, ${user.name}`;
+  }
+
+  // Logout logic
+  document.getElementById("logoutBtn").addEventListener("click", () => {
+    localStorage.removeItem("loggedIn");
+    alert("Logged out successfully.");
+    window.location.href = "login.html";
+  });
+  
+  const imageInput = document.getElementById("produceImage");
+const imagePreview = document.getElementById("imagePreview");
+let imageDataURL = "";
+
+imageInput.addEventListener("change", function () {
+  const file = this.files[0];
+  if (file) {
+    const reader = new FileReader();
+    reader.onload = function (e) {
+      imageDataURL = e.target.result;
+      imagePreview.src = imageDataURL;
+      imagePreview.style.display = "block";
+    };
+    reader.readAsDataURL(file);
+  }
+});
+
+  </script>
+</body>
+</html>
+

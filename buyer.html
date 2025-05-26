@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Buyer Dashboard | AgriLink</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <header>
+    <h1>🛒 Buyer Dashboard</h1>
+    <a href="index.html">← Back to Home</a>
+  </header>
+
+  <main>
+    <section>
+      <h2>Available Produce from Farmers</h2>
+      <div class="filter-box">
+  <input type="text" id="filterName" placeholder="Search by produce name..." />
+  <input type="text" id="filterLocation" placeholder="Search by location..." />
+</div>
+
+      <div id="produceCards"></div>
+    </section>
+  </main>
+<script>const savedData = JSON.parse(localStorage.getItem("produceList")) || [];
+
+const produceData = savedData.length > 0 ? savedData : [
+  {
+    name: "Maize",
+    quantity: 200,
+    price: 30,
+    farmer: { name: "John M.", phone: "+254701234567", location: "Eldoret" }
+  }
+];
+
+  const container = document.getElementById("produceCards");
+  const filterName = document.getElementById("filterName");
+  const filterLocation = document.getElementById("filterLocation");
+
+  function renderProduce(data) {
+    
+<div class="produce-card">
+  ${item.image ? `<img src="${item.image}" alt="${item.name}" style="max-width: 100%; height: auto; margin-bottom: 10px;" />` : ""}
+  <h3>${item.name}</h3>
+  <p><strong>Quantity:</strong> ${item.quantity} kg</p>
+  <p><strong>Price:</strong> KES ${item.price}/kg</p>
+  <p><strong>Farmer:</strong> ${item.farmer.name} (${item.farmer.location})</p>
+  <p><strong>Contact:</strong> <a href="tel:${item.farmer.phone}">${item.farmer.phone}</a></p>
+  <button onclick="openChat('${item.farmer.name}')">Message Farmer</button>
+</div>
+
+
+
+  }
+
+  function applyFilters() {
+    const nameVal = filterName.value.toLowerCase();
+    const locVal = filterLocation.value.toLowerCase();
+
+    const filtered = produceData.filter((item) => {
+      return (
+        item.name.toLowerCase().includes(nameVal) &&
+        item.farmer.location.toLowerCase().includes(locVal)
+      );
+    });
+// Chat modal logic
+const modal = document.getElementById("chatModal");
+const closeBtn = document.querySelector(".close");
+const chatFarmerName = document.getElementById("chatFarmerName");
+const chatBox = document.getElementById("chatBox");
+const chatInput = document.getElementById("chatInput");
+const sendBtn = document.getElementById("sendMsgBtn");
+
+function openChat(farmerName) {
+  chatFarmerName.textContent = "Chatting with: " + farmerName;
+  chatBox.innerHTML = '<p class="chat-bot">Hello! I’m interested in your produce.</p>';
+  modal.style.display = "block";
+}
+
+closeBtn.onclick = () => (modal.style.display = "none");
+window.onclick = (event) => {
+  if (event.target == modal) modal.style.display = "none";
+};
+
+sendBtn.onclick = () => {
+  const msg = chatInput.value.trim();
+  if (msg) {
+    const messageHTML = `<p class="chat-user">${msg}</p>`;
+    chatBox.innerHTML += messageHTML;
+    chatInput.value = "";
+    chatBox.scrollTop = chatBox.scrollHeight;
+  }
+};
+
+    renderProduce(filtered);
+  }
+
+  // Initial render
+  renderProduce(produceData);
+
+  // Listen to filter input changes
+  filterName.addEventListener("input", applyFilters);
+  filterLocation.addEventListener("input", applyFilters);
+</script>
+<div id="chatModal" class="modal">
+  <div class="modal-content">
+    <span class="close">&times;</span>
+    <h3>Chat with Farmer</h3>
+    <p id="chatFarmerName"></p>
+    <div class="chat-box" id="chatBox">
+      <p class="chat-bot">Hello! I’m interested in your produce.</p>
+    </div>
+    <input type="text" id="chatInput" placeholder="Type your message..." />
+    <button id="sendMsgBtn">Send</button>
+  </div>
+</div>
+
+</body>
+</html>
